@@ -1,0 +1,60 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lico.example">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:name=".app.EApplication"
+        android:theme="@style/AppBaseTheme">
+        <activity android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+            android:label="过渡页面">
+
+        </activity>
+
+    <activity android:name=".activity.MainActivity"
+        android:screenOrientation="portrait">
+
+    </activity>
+
+        <activity android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.SwipeListViewActivity">
+
+        </activity>
+
+        <activity android:name=".activity.UpdateActivity">
+
+        </activity>
+
+        <activity android:name=".activity.GsonActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".activity.PersonalActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".activity.CoordinatorOneActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".activity.CoordinatorTwoActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+    </application>
+
+</manifest>

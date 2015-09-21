@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fits_windows" format="boolean"/>
+
+    <!--左侧菜单的Header的高度-->
+    <attr name="menu_header_height" format="dimension"/>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="192dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_banner_dialog"
+        android:scaleType="centerCrop" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_avator"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/a_icon_b"
+        fresco:roundedCornerRadius="90dp" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/user_avator"
+        android:layout_below="@id/user_avator"
+        android:singleLine="true"
+        android:text="lico"
+        android:textColor="@color/comm_white"
+        android:textSize="16.0sp"
+        android:textStyle="bold" />
+</RelativeLayout>
