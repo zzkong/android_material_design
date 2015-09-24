@@ -29,9 +29,9 @@ import lico.example.adapter.BaseAdapterHelper;
 import lico.example.adapter.BaseQuickAdapter;
 import lico.example.adapter.SimpleRecyclerAdapter;
 import lico.example.bean.HttpResponseEntity;
-import lico.example.bean.ImageInfo;
+import lico.example.bean.ImagesListEntity;
+import lico.example.bean.ResponseImagesListEntity;
 import lico.example.http.HttpManager;
-import lico.example.utils.ConstantURL;
 
 /**
  * Created by Administrator on 2015/8/31.
@@ -48,10 +48,10 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
     @Bind(R.id.content)
     FrameLayout content;
 
-    private List<ImageInfo> imageInfos;
+    private List<ImagesListEntity> imageInfos;
     private SimpleRecyclerAdapter mAdapter;
-    int num = 10;
-    boolean isLoadingMore;
+    private String keywords;
+    private int pageIndex = 0;
 
     public static CommonListFragment newFragment(String type) {
         Bundle bundle = new Bundle();
@@ -76,18 +76,17 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
         showProgressWheel(true);
         initRecyclerView();
         initData();
-        refresher.setOnRefreshListener(this);
+
     }
 
     private void initData() {
-
-        String url = ConstantURL.imageurl + ConstantURL.apikey + "&num=" + num;
-        HttpManager.getImages(url, new JSONParserCompleteListener() {
+        keywords = "美女";
+        HttpManager.getImages(keywords, pageIndex, new JSONParserCompleteListener() {
             @Override
             public void ParserCompleteListener(HttpResponseEntity response, Object object) {
                 if (response.responseCode == 0) {
-                    List<ImageInfo> list = (List<ImageInfo>) object;
-                    imageInfos.addAll(list);
+                    ResponseImagesListEntity entity = (ResponseImagesListEntity) object;
+                    imageInfos.addAll(entity.imgs);
                     mAdapter.notifyDataSetChanged();
                     refresher.setRefreshing(false);
                 } else {
@@ -98,31 +97,33 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void initRecyclerView() {
-        imageInfos = new ArrayList<ImageInfo>();
+        imageInfos = new ArrayList<ImagesListEntity>();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setOnScrollListener(mRecyclerScrollListener);
+        refresher.setOnRefreshListener(this);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new SimpleRecyclerAdapter<ImageInfo>(getActivity(), imageInfos, R.layout.view_image) {
+        mAdapter = new SimpleRecyclerAdapter<ImagesListEntity>(getActivity(), imageInfos, R.layout.view_image) {
             @Override
-            protected void convert(BaseAdapterHelper helper, ImageInfo item) {
-                helper.setImageByUrl(R.id.image_id, item.picUrl);
+            protected void convert(BaseAdapterHelper helper, ImagesListEntity item) {
+                helper.setImageByUrl(R.id.image_id, item.imageUrl);
             }
         };
         mAdapter.setOnInViewClickListener(R.id.root_layout,
-                new BaseQuickAdapter.onInternalClickListenerImpl<ImageInfo>() {
+                new BaseQuickAdapter.onInternalClickListenerImpl<ImagesListEntity>() {
                     @Override
-                    public void OnClickListener(View parentV, View v, Integer position, ImageInfo values) {
+                    public void OnClickListener(View parentV, View v, Integer position, ImagesListEntity values) {
                         Intent intent = new Intent(getActivity(), SwipeListViewActivity.class);
                         startActivity(intent);
                     }
                 });
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         recyclerView.setAdapter(mAdapter);
 
         showProgressWheel(false);
-        refresher.setOnRefreshListener(this);
+
     }
 
     RecyclerView.OnScrollListener mRecyclerScrollListener = new RecyclerView.OnScrollListener() {
@@ -138,9 +139,8 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
             layoutManager = recyclerView.getLayoutManager();
             int lastVisibleItem = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
             int totalItemCount = mAdapter.getItemCount();
-            int currentDataCount = imageInfos.size();
             if(lastVisibleItem >= totalItemCount -4 && dy > 0){
-                    num = num + 10;
+                    pageIndex ++;
                     initData();
             }
         }
@@ -155,7 +155,7 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
-        num = 10;
+        pageIndex = 0;
         imageInfos.clear();
         initData();
 

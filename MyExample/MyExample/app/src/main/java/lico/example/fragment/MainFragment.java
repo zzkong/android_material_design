@@ -46,6 +46,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        viewpager.setOffscreenPageLimit(0);
         setupViewPager(viewpager);
     }
 
