@@ -3,11 +3,11 @@ package lico.example.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,7 @@ import lico.example.http.HttpManager;
 /**
  * Created by Administrator on 2015/8/31.
  */
-public class CommonListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CommonListFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
     @Bind(R.id.recyclerView)
@@ -51,6 +51,8 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
     private List<ImagesListEntity> imageInfos;
     private SimpleRecyclerAdapter mAdapter;
     private String keywords;
+    private boolean isPrepared;
+    private boolean mHasLoadedOnce;
     private int pageIndex = 0;
 
     public static CommonListFragment newFragment(String type) {
@@ -65,22 +67,32 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_common_list, container, false);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            keywords = bundle.getString("type");
+        }
         ButterKnife.bind(this, view);
+        initRecyclerView();
+        showProgressWheel(true);
+        isPrepared = true;
+        lazyLoad();
+        ViewGroup parent = (ViewGroup) view.getParent();
+        if(parent != null){
+            parent.removeView(view);
+        }
         return view;
     }
 
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        showProgressWheel(true);
-        initRecyclerView();
-        initData();
+    protected void lazyLoad() {
+        if(!isPrepared || !isVisible){
+            return;
+        }
 
+        initData();
     }
 
     private void initData() {
-        keywords = "美女";
         HttpManager.getImages(keywords, pageIndex, new JSONParserCompleteListener() {
             @Override
             public void ParserCompleteListener(HttpResponseEntity response, Object object) {
@@ -184,4 +196,6 @@ public class CommonListFragment extends Fragment implements SwipeRefreshLayout.O
         getActivity().getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
         return typedValue.data;
     }
+
+
 }

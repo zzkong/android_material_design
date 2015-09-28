@@ -4,64 +4,98 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import lico.example.R;
 import lico.example.app.BaseActivity;
+import lico.example.fragment.BaseFragment;
 import lico.example.fragment.EventFragment;
 import lico.example.fragment.MainFragment;
+import lico.example.utils.Navigator;
 
 /**
  * Created by zwl on 2015/8/29.
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.container)
-    FrameLayout container;
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
+
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     private ActionBarDrawerToggle mDrawerToggle;
+    private Toolbar mToolbar;
+    private int mCurrentMenuItem;
+    private Navigator mNavigator;
 
     @Override
     protected int getLayoutView() {
         return R.layout.activity_home;
     }
-
     @Override
-    protected void initToolbar() {
-        super.initToolbar(toolbar);
-    }
+    protected void initToolbar() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initToolbar();
+        setupToolbar();
+        initNavigator();
         initDrawerView();
-        init();
+        mCurrentMenuItem = R.id.nav_home;
+        setNewRootFragment(MainFragment.newInstance());
     }
 
-    private void init(){
-        Fragment fragment = MainFragment.newInstance();
-        getSupportActionBar().setTitle("Android");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment, "text").commit();
+    private void initNavigator() {
+        if(mNavigator != null) return;
+        mNavigator = new Navigator(getSupportFragmentManager(), R.id.container);
+    }
+
+    private void setNewRootFragment(BaseFragment fragment){
+        if(fragment.hasCustomToolbar()){
+            hideActionBar();
+        }else {
+            showActionBar();
+        }
+        mNavigator.setRootFragment(fragment);
+        drawerLayout.closeDrawers();
+    }
+
+    private void hideActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar == null) return;
+        actionBar.hide();
+    }
+
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar == null) return;
+        actionBar.show();
+    }
+
+    private void setupToolbar() {
+        mToolbar = ButterKnife.findById(this, R.id.toolbar);
+        if(mToolbar == null) {
+            return;
+        }
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar == null) return;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
     }
 
     private void initDrawerView(){
@@ -76,16 +110,7 @@ public class HomeActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                disposeMenuAction(menuItem);
-                drawerLayout.closeDrawers();
-
-                return true;
-            }
-        });
+        navigationView.setNavigationItemSelectedListener(this);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, 0, 0) {
             @Override
@@ -102,27 +127,6 @@ public class HomeActivity extends BaseActivity {
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    private void disposeMenuAction(MenuItem item){
-        Fragment fragment = null;
-        switch (item.getItemId()){
-            case R.id.nav_home:
-                fragment = MainFragment.newInstance();
-            break;
-            case R.id.nav_event:
-                fragment = EventFragment.newInstance();
-                break;
-            case R.id.nav_resume:
-                fragment = EventFragment.newInstance();
-                break;
-            case R.id.nav_look_back:
-                fragment = EventFragment.newInstance();
-                break;
-        }
-        getSupportActionBar().setTitle("Android");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment, "text").commit();
     }
 
     @Override
@@ -159,5 +163,35 @@ public class HomeActivity extends BaseActivity {
         if(mDrawerToggle != null){
             mDrawerToggle.syncState();
         }
+    }
+
+    public void openDrawer(){
+        drawerLayout.openDrawer(Gravity.LEFT);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        if(id == mCurrentMenuItem){
+            drawerLayout.closeDrawers();
+            return false;
+        }
+        switch (id){
+            case R.id.nav_home:
+                setNewRootFragment(MainFragment.newInstance());
+                break;
+            case R.id.nav_event:
+                setNewRootFragment(EventFragment.newInstance());
+                break;
+            case R.id.nav_resume:
+                setNewRootFragment(MainFragment.newInstance());
+                break;
+            case R.id.nav_look_back:
+                setNewRootFragment(MainFragment.newInstance());
+                break;
+        }
+        mCurrentMenuItem = id;
+        menuItem.setChecked(true);
+        return false;
     }
 }

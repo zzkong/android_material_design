@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:background="#F9F900"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#F9F900">
+
+        <include layout="@layout/toolbar_layout" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            app:tabIndicatorColor="#FF00FF00"
-            app:tabSelectedTextColor="#FF00FF00"
-            app:tabGravity="center"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabMode="fixed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.design.widget.TabLayout>
+            android:layout_height="wrap_content"
+
+            app:tabGravity="center"
+            app:tabIndicatorColor="#FF00FF00"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#FF00FF00"></android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v4.view.ViewPager>
 </android.support.design.widget.CoordinatorLayout>

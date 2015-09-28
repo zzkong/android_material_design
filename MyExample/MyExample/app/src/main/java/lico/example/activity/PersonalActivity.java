@@ -67,7 +67,7 @@ public class PersonalActivity extends AppCompatActivity {
     private void initRecyclerView() {
         imageInfos = new ArrayList<ImageInfo>();
         ImageInfo info = null;    //模拟数据
-    
+
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
