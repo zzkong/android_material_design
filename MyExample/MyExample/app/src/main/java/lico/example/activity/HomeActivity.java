@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     private Toolbar mToolbar;
     private int mCurrentMenuItem;
     private Navigator mNavigator;
+    private FragmentManager mFragmentManager;
+    private MainFragment mMainFragment;
+    private EventFragment mEventFragment;
 
     @Override
     protected int getLayoutView() {
@@ -53,25 +57,56 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
-        initNavigator();
+ //       initNavigator();
         initDrawerView();
+        mFragmentManager = getSupportFragmentManager();
         mCurrentMenuItem = R.id.nav_home;
-        setNewRootFragment(MainFragment.newInstance());
+        setNewRootFragment(MainFragment.newInstance(), 0);
     }
 
-    private void initNavigator() {
-        if(mNavigator != null) return;
-        mNavigator = new Navigator(getSupportFragmentManager(), R.id.container);
-    }
+//    private void initNavigator() {
+//        if(mNavigator != null) return;
+//        mNavigator = new Navigator(getSupportFragmentManager(), R.id.container);
+//    }
 
-    private void setNewRootFragment(BaseFragment fragment){
+    private void setNewRootFragment(BaseFragment fragment, int index){
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         if(fragment.hasCustomToolbar()){
             hideActionBar();
         }else {
             showActionBar();
         }
-        mNavigator.setRootFragment(fragment);
+        hideFragment(transaction);
+        switch (index){
+            case 0:
+                if(mMainFragment == null){
+                    mMainFragment = new MainFragment();
+                    transaction.add(R.id.container, mMainFragment);
+                }else{
+                    transaction.show(mMainFragment);
+                }
+            break;
+            case 1:
+                if(mEventFragment == null){
+                    mEventFragment = new EventFragment();
+                    transaction.add(R.id.container, mEventFragment);
+                }else {
+                    transaction.show(mEventFragment);
+                }
+                break;
+        }
+        transaction.commit();
+     //   mNavigator.setRootFragment(fragment);
         drawerLayout.closeDrawers();
+    }
+
+    private void hideFragment(FragmentTransaction transaction){
+        if(mMainFragment != null){
+            transaction.hide(mMainFragment);
+        }
+        if(mEventFragment != null){
+            transaction.hide(mEventFragment);
+        }
     }
 
     private void hideActionBar(){
@@ -178,16 +213,16 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         }
         switch (id){
             case R.id.nav_home:
-                setNewRootFragment(MainFragment.newInstance());
+                setNewRootFragment(MainFragment.newInstance(), 0);
                 break;
             case R.id.nav_event:
-                setNewRootFragment(EventFragment.newInstance());
+                setNewRootFragment(EventFragment.newInstance(), 1);
                 break;
             case R.id.nav_resume:
-                setNewRootFragment(MainFragment.newInstance());
+                setNewRootFragment(MainFragment.newInstance(), 2);
                 break;
             case R.id.nav_look_back:
-                setNewRootFragment(MainFragment.newInstance());
+                setNewRootFragment(MainFragment.newInstance(), 3);
                 break;
         }
         mCurrentMenuItem = id;

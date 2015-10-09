@@ -1,5 +1,6 @@
 package lico.example.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import lico.example.R;
 import lico.example.app.EApplication;
@@ -41,6 +43,14 @@ public class BaseAdapterHelper extends RecyclerView.ViewHolder {
             Glide.with(EApplication.getInstance()).load(url)
             .placeholder(R.drawable.night)
             .crossFade().into((RatioImageView)view);
+        }else if(view instanceof ImageView){
+            Glide.with(EApplication.getInstance()).load(url)
+                    .placeholder(R.drawable.night)
+                    .centerCrop()
+                    .crossFade().into((ImageView) view);
+        }else if(view instanceof SimpleDraweeView){
+            Uri uri = Uri.parse(url);
+            ((SimpleDraweeView) view).setImageURI(uri);
         }
     }
 

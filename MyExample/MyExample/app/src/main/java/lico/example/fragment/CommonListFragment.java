@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +87,6 @@ public class CommonListFragment extends LazyFragment implements SwipeRefreshLayo
         if(!isPrepared || !isVisible){
             return;
         }
-
         initData();
     }
 

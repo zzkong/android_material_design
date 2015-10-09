@@ -36,11 +36,6 @@
 
         </activity>
 
-        <activity android:name=".activity.GsonActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
         <activity android:name=".activity.PersonalActivity"
             android:screenOrientation="portrait">
 
