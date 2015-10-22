@@ -79,17 +79,19 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         hideFragment(transaction);
         switch (index){
             case 0:
+                mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag("main");
                 if(mMainFragment == null){
                     mMainFragment = new MainFragment();
-                    transaction.add(R.id.container, mMainFragment);
+                    transaction.add(R.id.container, mMainFragment, "main");
                 }else{
                     transaction.show(mMainFragment);
                 }
             break;
             case 1:
+                mEventFragment = (EventFragment) mFragmentManager.findFragmentByTag("event");
                 if(mEventFragment == null){
                     mEventFragment = new EventFragment();
-                    transaction.add(R.id.container, mEventFragment);
+                    transaction.add(R.id.container, mEventFragment, "event");
                 }else {
                     transaction.show(mEventFragment);
                 }

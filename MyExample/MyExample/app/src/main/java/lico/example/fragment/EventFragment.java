@@ -3,6 +3,7 @@ package lico.example.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 import lico.example.Interface.JSONParserCompleteListener;
 import lico.example.R;
 import lico.example.adapter.BaseAdapterHelper;
@@ -42,6 +44,10 @@ public class EventFragment extends BaseFragment {
     FloatingActionButton floatingActionButton;
 
     int pageIndex = 0;
+    @Bind(R.id.ptr_frameLayout)
+    PtrFrameLayout ptrFrameLayout;
+    @Bind(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     private List<ImagesListEntity> imageInfos;
     private SimpleRecyclerAdapter mAdapter;
@@ -82,7 +88,6 @@ public class EventFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
         return rootView;
@@ -121,7 +126,7 @@ public class EventFragment extends BaseFragment {
         });
     }
 
-    private void moveFab(){
+    private void moveFab() {
         appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
             @Override
@@ -133,7 +138,7 @@ public class EventFragment extends BaseFragment {
         });
     }
 
-    private void animFab(final float deltaY){
+    private void animFab(final float deltaY) {
         ViewCompat.animate(floatingActionButton)
                 .translationYBy(deltaY)
                 .setInterpolator(AnimUtils.FAST_OUT_SLOW_IN_INTERPOLATOR)

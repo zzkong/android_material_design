@@ -41,7 +41,6 @@ public class BaseAdapterHelper extends RecyclerView.ViewHolder {
         View view = retrieveView(viewId);
         if(view instanceof RatioImageView){    //普通图片用glide加载
             Glide.with(EApplication.getInstance()).load(url)
-            .placeholder(R.drawable.night)
             .crossFade().into((RatioImageView)view);
         }else if(view instanceof ImageView){
             Glide.with(EApplication.getInstance()).load(url)
