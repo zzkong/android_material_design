@@ -1,36 +1,41 @@
 package lico.example.activity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lico.example.InterfaceView.HomeView;
 import lico.example.R;
 import lico.example.app.BaseActivity;
+import lico.example.bean.UserInfo;
 import lico.example.fragment.BaseFragment;
 import lico.example.fragment.EventFragment;
 import lico.example.fragment.MainFragment;
-import lico.example.utils.Navigator;
+import lico.example.presenter.HomePresenter;
+import lico.example.presenter.impl.HomePresenterImpl;
+import lico.example.utils.BitmapUtils;
+import lico.example.utils.NetUtils;
 
 /**
  * Created by zwl on 2015/8/29.
  */
-public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends BaseActivity implements HomeView, NavigationView.OnNavigationItemSelectedListener {
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
@@ -38,112 +43,123 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+    ImageView mHeadBg;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
     private int mCurrentMenuItem;
-    private Navigator mNavigator;
     private FragmentManager mFragmentManager;
     private MainFragment mMainFragment;
     private EventFragment mEventFragment;
+    private HomePresenter mHomePresenter = null;
 
     @Override
-    protected int getLayoutView() {
+    protected int getContentViewLayoutID() {
         return R.layout.activity_home;
     }
-    @Override
-    protected void initToolbar() {}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setupToolbar();
- //       initNavigator();
-        initDrawerView();
-        mFragmentManager = getSupportFragmentManager();
-        mCurrentMenuItem = R.id.nav_home;
-        setNewRootFragment(MainFragment.newInstance(), 0);
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
     }
 
-//    private void initNavigator() {
-//        if(mNavigator != null) return;
-//        mNavigator = new Navigator(getSupportFragmentManager(), R.id.container);
-//    }
+    @Override
+    protected void initViewsAndEvents() {
+        mHomePresenter = new HomePresenterImpl(this, this);
+        mHomePresenter.initialized();
+    }
 
-    private void setNewRootFragment(BaseFragment fragment, int index){
+    @Override
+    public void initalizeViews(UserInfo userInfo) {
+        setupToolbar();
+        initDrawerView(userInfo);
+        mFragmentManager = getSupportFragmentManager();
+        mCurrentMenuItem = R.id.nav_home;
+        setNewRootFragment(new MainFragment(), 0);
+    }
+
+    @Override
+    public void setHeadBg(Bitmap bitmap) {
+        mHeadBg.setImageBitmap(bitmap);
+    }
+
+    private void setNewRootFragment(BaseFragment fragment, int index) {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        if(fragment.hasCustomToolbar()){
-            hideActionBar();
-        }else {
-            showActionBar();
-        }
+        showOrhideActionBar(!fragment.hasCustomToolbar());
         hideFragment(transaction);
-        switch (index){
+        switch (index) {
             case 0:
                 mMainFragment = (MainFragment) mFragmentManager.findFragmentByTag("main");
-                if(mMainFragment == null){
+                if (mMainFragment == null) {
                     mMainFragment = new MainFragment();
                     transaction.add(R.id.container, mMainFragment, "main");
-                }else{
+                } else {
                     transaction.show(mMainFragment);
                 }
-            break;
+                break;
             case 1:
                 mEventFragment = (EventFragment) mFragmentManager.findFragmentByTag("event");
-                if(mEventFragment == null){
+                if (mEventFragment == null) {
                     mEventFragment = new EventFragment();
                     transaction.add(R.id.container, mEventFragment, "event");
-                }else {
+                } else {
                     transaction.show(mEventFragment);
                 }
                 break;
         }
         transaction.commit();
-     //   mNavigator.setRootFragment(fragment);
         drawerLayout.closeDrawers();
     }
 
-    private void hideFragment(FragmentTransaction transaction){
-        if(mMainFragment != null){
+    private void hideFragment(FragmentTransaction transaction) {
+        if (mMainFragment != null) {
             transaction.hide(mMainFragment);
         }
-        if(mEventFragment != null){
+        if (mEventFragment != null) {
             transaction.hide(mEventFragment);
         }
     }
 
-    private void hideActionBar(){
+    private void showOrhideActionBar(boolean isShow) {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar == null) return;
-        actionBar.hide();
-    }
-
-    private void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar == null) return;
-        actionBar.show();
+        if (null == actionBar) return;
+        if (isShow) {
+            actionBar.show();
+        } else {
+            actionBar.hide();
+        }
     }
 
     private void setupToolbar() {
         mToolbar = ButterKnife.findById(this, R.id.toolbar);
-        if(mToolbar == null) {
+        if (mToolbar == null) {
             return;
         }
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar == null) return;
+        if (actionBar == null) return;
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
     }
 
-    private void initDrawerView(){
+    private void initDrawerView(UserInfo userInfo) {
 //        View views = getLayoutInflater().inflate(R.layout.navigation_header, null);
 //        navigationView.addHeaderView(views);
         View view = navigationView.inflateHeaderView(R.layout.navigation_header);
+        TextView name = (TextView) view.findViewById(R.id.user_name);
+        TextView email = (TextView) view.findViewById(R.id.user_email);
+        mHeadBg = (ImageView) view.findViewById(R.id.head_bg);
         SimpleDraweeView avator = (SimpleDraweeView) view.findViewById(R.id.user_avator);
+
+        name.setText(userInfo.name);
+        email.setText(userInfo.email);
+        avator.setBackgroundResource(R.drawable.avator);
+        mHomePresenter.blurBitmap(avator, BitmapUtils.matrixBitmap(this, userInfo.avator));
+
         avator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(HomeActivity.this, PersonalActivity.class);
+                Intent intent = new Intent(HomeActivity.this, PersonalActivity.class);
                 startActivity(intent);
             }
         });
@@ -166,69 +182,54 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         drawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item))
-            return true;
-
-        if(android.R.id.home == item.getItemId()){
-            if(drawerLayout.isDrawerVisible(GravityCompat.START))
-                drawerLayout.closeDrawers();
-            else
-                drawerLayout.openDrawer(GravityCompat.START);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if(mDrawerToggle != null){
-            mDrawerToggle.syncState();
-        }
-    }
-
-    public void openDrawer(){
+    public void openDrawer() {
         drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
-        if(id == mCurrentMenuItem){
+        if (id == mCurrentMenuItem) {
             drawerLayout.closeDrawers();
             return false;
         }
-        switch (id){
+        switch (id) {
             case R.id.nav_home:
-                setNewRootFragment(MainFragment.newInstance(), 0);
+                setNewRootFragment(new MainFragment(), 0);
                 break;
             case R.id.nav_event:
                 setNewRootFragment(EventFragment.newInstance(), 1);
                 break;
             case R.id.nav_resume:
-                setNewRootFragment(MainFragment.newInstance(), 2);
+                setNewRootFragment(new MainFragment(), 2);
                 break;
             case R.id.nav_look_back:
-                setNewRootFragment(MainFragment.newInstance(), 3);
+                setNewRootFragment(new MainFragment(), 3);
                 break;
         }
         mCurrentMenuItem = id;
         menuItem.setChecked(true);
         return false;
     }
+
+    @Override
+    protected View getLoadingTargetView() {return null;}
+
+    @Override
+    protected boolean isBindEventBusHere() {return false;}
+
+    @Override
+    protected void onNetworkDisConnected() {}
+
+    @Override
+    protected void onNetworkConnected(NetUtils.NetType type) {}
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {return false;}
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {}
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {return null;}
 }

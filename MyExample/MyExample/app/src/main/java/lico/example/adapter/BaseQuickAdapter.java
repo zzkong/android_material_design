@@ -77,6 +77,10 @@ public abstract class BaseQuickAdapter<T, H extends BaseAdapterHelper> extends R
         convert((H) holder, item);
     }
 
+    public List<T> getDataList(){
+        return data;
+    }
+
     @Override
     public int getItemCount() {
         return data.size();

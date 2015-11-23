@@ -2,33 +2,23 @@ package lico.example.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import lico.example.R;
 import lico.example.activity.HomeActivity;
+import lico.example.app.BaseView;
 
 /**
  * Created by Administrator on 2015/9/28.
  */
-public abstract class BaseFragment extends Fragment{
+public abstract class BaseFragment extends BaseLazyFragment implements BaseView{
     Toolbar mToolbar;
 
     public HomeActivity getHomeActivity(){
         return (HomeActivity)super.getActivity();
     }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayout(), container, false);
-        ButterKnife.bind(this, view);
-        return view;
-   }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -61,5 +51,28 @@ public abstract class BaseFragment extends Fragment{
         return R.string.string_no_title;
     }
 
-    protected abstract int getLayout();
+    @Override
+    public void showError(String msg) {
+        toggleShowError(true, msg, null);
+    }
+
+    @Override
+    public void showException(String msg) {
+        toggleShowError(true, msg, null);
+    }
+
+    @Override
+    public void showNetError() {
+        toggleNetworkError(true, null);
+    }
+
+    @Override
+    public void showLoading(String msg) {
+        toggleShowLoading(true, null);
+    }
+
+    @Override
+    public void hideLoading() {
+        toggleShowLoading(false, null);
+    }
 }

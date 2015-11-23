@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
 <android.support.v7.widget.CardView
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="18dp"
-    android:layout_marginRight="18dp">
+    android:layout_marginBottom="10dp">
 
     <com.balysv.materialripple.MaterialRippleLayout
       android:id="@+id/root_layout"
-       android:layout_width="match_parent"
+       android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:mrl_rippleOverlay="true">
-    <lico.example.views.RatioImageView
-        android:layout_width="match_parent"
-        android:id="@+id/image_id"
-        android:scaleType="fitCenter"
-        android:layout_height="300dp" />
+        <lico.example.views.PLAImageView
+            android:layout_width="wrap_content"
+            android:id="@+id/image_id"
+            android:scaleType="fitCenter"
+            android:layout_height="wrap_content" />
     </com.balysv.materialripple.MaterialRippleLayout>
 </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -9,9 +9,12 @@
         android:name=".app.EApplication"
         android:theme="@style/AppBaseTheme">
         <activity android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait"
-            android:label="过渡页面">
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
     <activity android:name=".activity.MainActivity"
@@ -21,18 +24,10 @@
 
         <activity android:name=".activity.HomeActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".activity.SwipeListViewActivity">
-
-        </activity>
-
-        <activity android:name=".activity.UpdateActivity">
 
         </activity>
 
@@ -49,6 +44,10 @@
             android:screenOrientation="portrait">
 
         </activity>
+
+        <activity android:name=".activity.SpaceImageDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/IMThemeTransparent"></activity>
 
     </application>
 

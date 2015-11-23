@@ -1,26 +1,22 @@
 package lico.example.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+import lico.example.InterfaceView.MainFragmentView;
 import lico.example.R;
 import lico.example.adapter.TabFragmentPagerAdapter;
+import lico.example.presenter.Presenter;
+import lico.example.presenter.impl.MainFragmentPresenterImpl;
 
 /**
  * Created by zwl 首页 on 2015/8/31.
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements MainFragmentView {
 
     @Bind(R.id.tabs)
     TabLayout tabs;
@@ -28,18 +24,7 @@ public class MainFragment extends BaseFragment {
     ViewPager viewpager;
 
     private TabFragmentPagerAdapter mPagerAdapter;
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
+    private Presenter mMainPresenterImpl;
 
     @Override
     protected int getTitle() {
@@ -52,32 +37,61 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
-    protected int getLayout() {
+    protected int getContentViewLayoutID() {
         return R.layout.fragment_main;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewpager.setOffscreenPageLimit(0);
-        Log.e("", "------------------------------------我了个去");
-        setupViewPager(viewpager);
+    protected void initViewsAndEvents() {
+        mMainPresenterImpl = new MainFragmentPresenterImpl(getActivity(), this);
+        mMainPresenterImpl.initialized();
     }
 
-    private void setupViewPager(ViewPager viewPager){
+    @Override
+    public void initializePagerViews(final List<String> titles) {
         viewpager.setOffscreenPageLimit(1);
-        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("美女"), "美女");
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("动漫"), "动漫");
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("明星"), "明星");
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("汽车"), "汽车");
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("摄影"), "摄影");
-        mPagerAdapter.addFragment(CommonListFragment.newFragment("美食"), "美食");
-
-
+        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), titles);
         tabs.setTabsFromPagerAdapter(mPagerAdapter);
-        viewPager.setAdapter(mPagerAdapter);
+        viewpager.setAdapter(mPagerAdapter);
         tabs.setupWithViewPager(viewpager);
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                CommonListFragment fragment = (CommonListFragment) viewpager.getAdapter().instantiateItem(viewpager, position);
+                fragment.onPageSelected(position, titles.get(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
+    @Override
+    protected void onFirstUserVisible() {
+    }
+
+    @Override
+    protected void onUserVisible() {
+    }
+
+    @Override
+    protected void onUserInvisible() {
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
 }

@@ -7,36 +7,28 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import lico.example.fragment.CommonListFragment;
+
 /**
- * Created by Administrator on 2015/8/31.
+ * Created by zwl on 2015/8/31.
  */
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter{
 
-    private final List<Fragment> mFragments = new ArrayList<>();
-    private final List<String> mFragmentTitles = new ArrayList<>();
+    private List<String> mFragmentTitles = new ArrayList<>();
 
-    public TabFragmentPagerAdapter(FragmentManager fm) {
+    public TabFragmentPagerAdapter(FragmentManager fm, List<String> strings) {
         super(fm);
-    }
-
-    public void TabFragmentPagerAdapter(Fragment fragment, String title) {
-        mFragments.add(fragment);
-        mFragmentTitles.add(title);
-    }
-
-    public void addFragment(Fragment fragment, String title){
-        mFragments.add(fragment);
-        mFragmentTitles.add(title);
+        this.mFragmentTitles = strings;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        return new CommonListFragment();
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return mFragmentTitles.size();
     }
 
     @Override

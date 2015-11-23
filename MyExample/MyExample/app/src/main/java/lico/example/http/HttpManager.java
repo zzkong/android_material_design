@@ -1,6 +1,6 @@
 package lico.example.http;
 
-import lico.example.Interface.JSONParserCompleteListener;
+import lico.example.listener.JSONParserCompleteListener;
 import lico.example.bean.HttpResponseEntity;
 import lico.example.utils.UriHelper;
 

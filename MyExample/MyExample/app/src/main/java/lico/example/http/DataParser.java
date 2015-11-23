@@ -3,7 +3,7 @@ package lico.example.http;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import lico.example.Interface.JSONParserCompleteListener;
+import lico.example.listener.JSONParserCompleteListener;
 import lico.example.bean.HttpResponseEntity;
 import lico.example.bean.ResponseImagesListEntity;
 

@@ -19,7 +19,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrFrameLayout;
-import lico.example.Interface.JSONParserCompleteListener;
+import lico.example.listener.JSONParserCompleteListener;
 import lico.example.R;
 import lico.example.adapter.BaseAdapterHelper;
 import lico.example.adapter.SimpleRecyclerAdapter;
@@ -63,11 +63,6 @@ public class EventFragment extends BaseFragment {
     }
 
     @Override
-    protected int getLayout() {
-        return R.layout.fragment_event;
-    }
-
-    @Override
     protected int getTitle() {
         return R.string.string_floatingbutton;
     }
@@ -84,6 +79,41 @@ public class EventFragment extends BaseFragment {
         initRecycler();
         initData();
         moveFab();
+    }
+
+    @Override
+    protected void onFirstUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserInvisible() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return R.layout.fragment_event;
     }
 
     @Override

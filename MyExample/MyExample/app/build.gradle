@@ -2,7 +2,7 @@ apply plugin:'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '21.0.2'
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
         applicationId "lico.example"
@@ -10,6 +10,8 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        renderscriptTargetApi 21
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -38,4 +40,11 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile 'org.simple:androideventbus:latest'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+
+    //快速编译
+    compile 'com.github.mmin18.layoutcast:library:1.+@aar'
 }

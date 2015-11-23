@@ -18,6 +18,14 @@ public class Utils {
     private static int screenWidth = 0;
     private static int screenHeight = 0;
 
+    public static boolean isEmpty(String str) {
+        if (null == str || str.length() == 0 || str.equalsIgnoreCase("null") || str.isEmpty() || str.equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
@@ -50,7 +58,7 @@ public class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
-    public static Animation getBackgroundImageAnimation(Context context){
+    public static Animation getBackgroundImageAnimation(Context context) {
         return AnimationUtils.loadAnimation(context, R.anim.splash);
     }
 }

@@ -18,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import lico.example.R;
 import lico.example.app.BaseActivity;
+import lico.example.utils.NetUtils;
 import lico.example.views.SwipeMenu;
 import lico.example.views.SwipeMenuCreator;
 import lico.example.views.SwipeMenuItem;
@@ -41,21 +42,61 @@ public class SwipeListViewActivity extends BaseActivity {
 
 
     @Override
-    protected int getLayoutView() {
-        return R.layout.activity_swipe_listview;
-    }
-
-    @Override
-    protected void initToolbar() {
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_listview);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void onNetworkDisConnected() {
+
+    }
+
+    @Override
+    protected void onNetworkConnected(NetUtils.NetType type) {
+
+    }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return null;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
     }
 
     private void initViews() {

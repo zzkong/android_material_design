@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import lico.example.Interface.JSONParserCompleteListener;
+import lico.example.listener.JSONParserCompleteListener;
 import lico.example.app.EApplication;
 import lico.example.bean.HttpResponseEntity;
 

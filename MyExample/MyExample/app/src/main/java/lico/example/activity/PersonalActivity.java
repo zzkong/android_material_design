@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import lico.example.R;
 import lico.example.adapter.BaseAdapterHelper;
 import lico.example.adapter.BaseQuickAdapter;
 import lico.example.adapter.SimpleRecyclerAdapter;
+import lico.example.app.BaseActivity;
 import lico.example.bean.ImageInfo;
+import lico.example.utils.NetUtils;
 
 /**
  * Created by zwl on 2015/9/9.
  */
-public class PersonalActivity extends AppCompatActivity {
+public class PersonalActivity extends BaseActivity {
     @Bind(R.id.backgroud)
     ImageView backgroud;
     @Bind(R.id.toolbar)
@@ -46,14 +46,8 @@ public class PersonalActivity extends AppCompatActivity {
     private SimpleRecyclerAdapter mAdapter;
 
 
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal);
-        ButterKnife.bind(this);
-
+    protected void initViewsAndEvents() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -62,6 +56,51 @@ public class PersonalActivity extends AppCompatActivity {
         collapsingToolbar.setCollapsedTitleTextColor(Color.GREEN);//设置收缩后Toolbar上字体的颜色
         Glide.with(this).load(R.drawable.bg_banner_dialog).centerCrop().into(backgroud);
         initRecyclerView();
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return R.layout.activity_personal;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void onNetworkDisConnected() {
+
+    }
+
+    @Override
+    protected void onNetworkConnected(NetUtils.NetType type) {
+
+    }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return null;
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
     }
 
     private void initRecyclerView() {

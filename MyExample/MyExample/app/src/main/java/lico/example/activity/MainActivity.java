@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -36,6 +35,7 @@ import lico.example.adapter.ImageAdapter;
 import lico.example.adapter.SimpleRecyclerAdapter;
 import lico.example.app.BaseActivity;
 import lico.example.bean.ImageInfo;
+import lico.example.utils.NetUtils;
 
 
 /**
@@ -75,9 +75,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initToolbar();
         initDrawerView();
         initRecyclerView();
+    }
+
+    @Override
+    protected boolean isApplyKitKatTranslucency() {
+        return false;
     }
 
     private void initRecyclerView() {
@@ -128,7 +132,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     //    recyclerView.setAdapter(mAdapter);
 
         showProgressWheel(false);
-        refresher.setColorSchemeColors(getColorPrimary());
+  //      refresher.setColorSchemeColors(getColorPrimary());
         refresher.setOnRefreshListener(this);
     }
 
@@ -190,7 +194,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
     private void showProgressWheel(boolean visible) {
-        progressWheel.setBarColor(getColorPrimary());
+    //    progressWheel.setBarColor(getColorPrimary());
         if (visible) {
             if (!progressWheel.isSpinning()) {
                 progressWheel.spin();
@@ -222,14 +226,49 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
-    protected int getLayoutView() {
-        return R.layout.activity_main;
+    protected void initViewsAndEvents() {
+
     }
 
     @Override
-    protected void initToolbar() {
-        super.initToolbar(toolbar);
+    protected View getLoadingTargetView() {
+        return null;
     }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void onNetworkDisConnected() {
+
+    }
+
+    @Override
+    protected void onNetworkConnected(NetUtils.NetType type) {
+
+    }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return null;
+    }
+
 }

@@ -13,7 +13,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import lico.example.R;
 import lico.example.app.EApplication;
+import lico.example.views.PLAImageView;
 import lico.example.views.RatioImageView;
+import lico.example.views.SquaredImageView;
 
 /**
  * Created by zwl on 2015/8/25.
@@ -42,6 +44,12 @@ public class BaseAdapterHelper extends RecyclerView.ViewHolder {
         if(view instanceof RatioImageView){    //普通图片用glide加载
             Glide.with(EApplication.getInstance()).load(url)
             .crossFade().into((RatioImageView)view);
+        }else if(view instanceof PLAImageView){
+            Glide.with(EApplication.getInstance()).load(url)
+                    .crossFade().into((PLAImageView) view);
+        }else if(view instanceof SquaredImageView){
+            Glide.with(EApplication.getInstance()).load(url)
+                    .crossFade().into((SquaredImageView) view);
         }else if(view instanceof ImageView){
             Glide.with(EApplication.getInstance()).load(url)
                     .placeholder(R.drawable.night)

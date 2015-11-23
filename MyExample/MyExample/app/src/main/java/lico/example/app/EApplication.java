@@ -6,10 +6,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.github.mmin18.layoutcast.LayoutCast;
 import com.squareup.okhttp.OkHttpClient;
 
+import lico.example.BuildConfig;
 import lico.example.http.OkHttpStack;
-import lico.example.update.VolleyUtil;
+import lico.example.http.VolleyUtil;
 
 /**
  * Created by zwl on 15/5/22.
@@ -24,6 +26,9 @@ public class EApplication extends Application{
         instance = this;
         Fresco.initialize(instance);
         VolleyUtil.initialize(instance);
+        if(BuildConfig.DEBUG){
+            LayoutCast.init(this);
+        }
     }
 
     public static EApplication getInstance(){
